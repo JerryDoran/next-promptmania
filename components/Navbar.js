@@ -8,6 +8,7 @@ import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 export default function Navbar() {
   const isUserLoggedIn = true;
   const [providers, setProviders] = useState(null);
+  const [toggleMenu, setToggleMenu] = useState(false);
 
   useEffect(() => {
     async function getAllProviders() {
@@ -17,6 +18,25 @@ export default function Navbar() {
 
     getAllProviders();
   }, []);
+
+  function renderProviders() {
+    return (
+      <>
+        {providers &&
+          Object.values(providers).map((provider) => (
+            <button
+              type='button'
+              key={provider.name}
+              onClick={() => signIn(provider.id)}
+              className='black_btn'
+            >
+              Sign In
+            </button>
+          ))}
+      </>
+    );
+  }
+
   return (
     <nav className='flex-between w-full mb-16 pt-3'>
       <Link href='/' className='flex gap-2 flex-center'>
@@ -30,7 +50,7 @@ export default function Navbar() {
         <p className='logo_text'>Promptmania</p>
       </Link>
 
-      {/* Mobile Nav */}
+      {/* Desktop Nav */}
       <div className='sm:flex hidden'>
         {isUserLoggedIn ? (
           <div className='flex gap-3 md:gap-5'>
@@ -51,19 +71,53 @@ export default function Navbar() {
             </Link>
           </div>
         ) : (
-          <>
-            {providers &&
-              Object.values(providers).map((provider) => (
+          renderProviders()
+        )}
+      </div>
+
+      {/* Mobile Nav */}
+      <div className='sm:hidden flex relative'>
+        {isUserLoggedIn ? (
+          <div className='flex'>
+            <Image
+              src='/assets/images/logo.svg'
+              alt='profile'
+              width={37}
+              height={37}
+              className='rounded-full cursor-pointer'
+              onClick={() => setToggleMenu((prev) => !prev)}
+            />
+            {toggleMenu && (
+              <div className='dropdown'>
+                <Link
+                  href='/profile'
+                  className='dropdown_link'
+                  onClick={() => setToggleMenu(false)}
+                >
+                  My Profile
+                </Link>
+                <Link
+                  href='/create-prompt'
+                  className='dropdown_link'
+                  onClick={() => setToggleMenu(false)}
+                >
+                  Create Prompt
+                </Link>
                 <button
                   type='button'
-                  key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                  className='black_btn'
+                  className='mt-5 w-full black_btn'
+                  onClick={() => {
+                    setToggleMenu(false);
+                    signOut();
+                  }}
                 >
-                  Sign In
+                  Sign Out
                 </button>
-              ))}
-          </>
+              </div>
+            )}
+          </div>
+        ) : (
+          renderProviders()
         )}
       </div>
     </nav>
