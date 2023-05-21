@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
 export default function Navbar() {
-  const isUserLoggedIn = true;
+  const { data: session } = useSession();
   const [providers, setProviders] = useState(null);
   const [toggleMenu, setToggleMenu] = useState(false);
 
@@ -52,7 +52,7 @@ export default function Navbar() {
 
       {/* Desktop Nav */}
       <div className='sm:flex hidden'>
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className='flex gap-3 md:gap-5'>
             <Link href='/create-prompt' className='black_btn'>
               Create Post
@@ -62,7 +62,7 @@ export default function Navbar() {
             </button>
             <Link href='/profile'>
               <Image
-                src='/assets/images/logo.svg'
+                src={session?.user.image}
                 alt='profile'
                 width={37}
                 height={37}
@@ -77,10 +77,10 @@ export default function Navbar() {
 
       {/* Mobile Nav */}
       <div className='sm:hidden flex relative'>
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className='flex'>
             <Image
-              src='/assets/images/logo.svg'
+              src={session?.user.image}
               alt='profile'
               width={37}
               height={37}

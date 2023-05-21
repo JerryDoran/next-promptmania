@@ -1,0 +1,1 @@
+openssl rand -base64 32 - this command creates a random alphanumeric string
