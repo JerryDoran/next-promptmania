@@ -12,7 +12,7 @@ export default function CreatePromptPage() {
     tag: '',
   });
 
-  const session = useSession();
+  const { data: session } = useSession();
 
   const router = useRouter();
 
@@ -25,12 +25,10 @@ export default function CreatePromptPage() {
         method: 'POST',
         body: JSON.stringify({
           prompt: post.prompt,
-          userId: session?.user?.id,
+          userId: session?.user.id,
           tag: post.tag,
         }),
       });
-
-      console.log(response);
 
       if (response.ok) {
         router.push('/');
