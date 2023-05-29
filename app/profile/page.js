@@ -9,10 +9,13 @@ import Profile from '@components/Profile';
 export default function ProfilePage() {
   const { data: session } = useSession();
   const [posts, setPosts] = useState([]);
+  const router = useRouter();
 
-  async function handleEdit() {}
+  async function handleEdit(prompt) {
+    router.push(`/update-prompt?id=${prompt._id}`);
+  }
 
-  async function handleDelete() {}
+  async function handleDelete(prompt) {}
 
   useEffect(() => {
     async function fetchPosts() {
