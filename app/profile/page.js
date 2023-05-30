@@ -15,7 +15,23 @@ export default function ProfilePage() {
     router.push(`/update-prompt?id=${prompt._id}`);
   }
 
-  async function handleDelete(prompt) {}
+  async function handleDelete(prompt) {
+    const hasConfirmedDelete = confirm(
+      'Are you sure you want to delete this prompt?'
+    );
+
+    if (hasConfirmedDelete) {
+      try {
+        await fetch(`/api/prompt/${prompt._id.toString()}`, {
+          method: 'DELETE',
+        });
+        const filteredPrompts = posts.filter((post) => post._id !== prompt._id);
+        setPosts(filteredPrompts);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
 
   useEffect(() => {
     async function fetchPosts() {
